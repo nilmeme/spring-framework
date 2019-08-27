@@ -25,6 +25,7 @@ import org.springframework.lang.Nullable;
  * @author Rob Harrop
  * @since 2.0
  */
+// AttributeAccessor接口定义了最基本的对任意对象的元数据的修改或者获取
 public interface AttributeAccessor {
 
 	/**
@@ -36,6 +37,8 @@ public interface AttributeAccessor {
 	 * @param name the unique attribute key
 	 * @param value the attribute value to be attached
 	 */
+	// 将name定义的属性设置为提供的value值。如果value的值为null，则该属性为{@link #removeAttribute removed}。
+    // 通常，用户应该注意通过使用完全限定的名称（可能使用类或包名称作为前缀）来防止与其他元数据属性重叠。
 	void setAttribute(String name, @Nullable Object value);
 
 	/**
@@ -44,6 +47,7 @@ public interface AttributeAccessor {
 	 * @param name the unique attribute key
 	 * @return the current value of the attribute, if any
 	 */
+	// 获取标识为name的属性的值。
 	@Nullable
 	Object getAttribute(String name);
 
@@ -53,6 +57,7 @@ public interface AttributeAccessor {
 	 * @param name the unique attribute key
 	 * @return the last value of the attribute, if any
 	 */
+	// 删除标识为name的属性，并返回属性值
 	@Nullable
 	Object removeAttribute(String name);
 
@@ -61,11 +66,13 @@ public interface AttributeAccessor {
 	 * Otherwise return {@code false}.
 	 * @param name the unique attribute key
 	 */
+	// 如果名为name的属性是否存在，存在返回true，否则返回false。
 	boolean hasAttribute(String name);
 
 	/**
 	 * Return the names of all attributes.
 	 */
+	// 返回所有属性的名称。
 	String[] attributeNames();
 
 }
