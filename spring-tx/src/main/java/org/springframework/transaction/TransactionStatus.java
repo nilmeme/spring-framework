@@ -43,6 +43,7 @@ public interface TransactionStatus extends SavepointManager, Flushable {
 	 * in an existing transaction, or potentially not running in an actual
 	 * transaction in the first place.
 	 */
+	//是否是一个新的事务
 	boolean isNewTransaction();
 
 	/**
@@ -56,6 +57,7 @@ public interface TransactionStatus extends SavepointManager, Flushable {
 	 * @see #rollbackToSavepoint(Object)
 	 * @see #releaseSavepoint(Object)
 	 */
+	//是否有保存点
 	boolean hasSavepoint();
 
 	/**
@@ -75,6 +77,7 @@ public interface TransactionStatus extends SavepointManager, Flushable {
 	 * Return whether the transaction has been marked as rollback-only
 	 * (either by the application or by the transaction infrastructure).
 	 */
+	// 是否已被标记为回滚
 	boolean isRollbackOnly();
 
 	/**

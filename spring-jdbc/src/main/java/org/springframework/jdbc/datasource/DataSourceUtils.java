@@ -100,6 +100,8 @@ public abstract class DataSourceUtils {
 	public static Connection doGetConnection(DataSource dataSource) throws SQLException {
 		Assert.notNull(dataSource, "No DataSource specified");
 
+		// 先获取和当前线程绑定的ConnectionHolder（由于事务在执行业务逻辑前已经开启，已经有了和当前线程绑定的ConnectionHolder）,
+		// 所以会获取到和事务中使用的ConnectionHolder，这样就保证了他们使用的是同一个Connection了，自然就可以正常提交和回滚了
 		ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
 		if (conHolder != null && (conHolder.hasConnection() || conHolder.isSynchronizedWithTransaction())) {
 			conHolder.requested();
@@ -179,6 +181,7 @@ public abstract class DataSourceUtils {
 		Assert.notNull(con, "No Connection specified");
 
 		// Set read-only flag.
+		//设置数据连接的只读标识
 		if (definition != null && definition.isReadOnly()) {
 			try {
 				if (logger.isDebugEnabled()) {
@@ -201,6 +204,7 @@ public abstract class DataSourceUtils {
 		}
 
 		// Apply specific isolation level, if any.
+		//设置数据库连接的隔离级别
 		Integer previousIsolationLevel = null;
 		if (definition != null && definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT) {
 			if (logger.isDebugEnabled()) {

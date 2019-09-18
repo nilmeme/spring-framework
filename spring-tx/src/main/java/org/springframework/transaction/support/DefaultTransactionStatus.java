@@ -51,6 +51,28 @@ import org.springframework.util.Assert;
 public class DefaultTransactionStatus extends AbstractTransactionStatus {
 
 	@Nullable
+	/**
+	 * 目前jdbc事务是通过Connection来实现事务的，Hibernate是通过它自己定义的Transaction来实现的，
+	 * 所以各家的事务都不同，所以Spring只能以Object transaction的形式来表示各家的事务，
+	 * 事务的回滚和提交等操作都会最终委托给上述Object transaction来完成。
+	 */
+	/**
+	 * Object transaction 的职责就是提交回滚事务，这个transaction的选择可能如下：
+	 *
+	 * DataSourceTransactionObject
+	 * HibernateTransactionObject
+	 * JpaTransactionObject（之后再详细说）
+	 * 详细信息分别如下：
+	 *
+	 * 对于DataSourceTransactionObject：
+	 * 我们使用了dataSource来获取连接，要想实现事务功能，必然需要使用Connection，所以它中肯定有一个Connection来执行事务的操作。
+	 * DataSourceTransactionObject中有一个ConnectionHolder，它封装了一个Connection。
+	 *
+	 * 对于HibernateTransactionObject：
+	 * 我们使用了hibernate, 此时要想实现事务功能，必然需要通过hibernate自己定义的Transaction来实现。
+	 * HibernateTransactionObject中含有一个SessionHolder，和上面的ConnectionHolder一样，
+	 * 它封装了一个Session, 有了Session，我们就可以通过Session来产生一个Hibernate的Transaction，从而实现事务操作。
+	 */
 	private final Object transaction;
 
 	private final boolean newTransaction;
