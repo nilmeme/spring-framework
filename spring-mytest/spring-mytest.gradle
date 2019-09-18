@@ -16,10 +16,16 @@ repositories {
 }
 
 dependencies {
-//    compile(project(":spring-context"))
-    compile(project(":spring-web"))
+
     compile(project(":spring-core"))
     compile(project(":spring-beans"))
     compile(project(":spring-context"))
+    compile(project(":spring-aop"))
+    compile(project(":spring-websocket"))
+    compile(project(":spring-messaging"))
+    compile(project(":spring-tx"))
+    compile(project(":spring-aspects"))
+
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

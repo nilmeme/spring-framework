@@ -140,65 +140,93 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private volatile Object beanClass;
 
+	//bean 的作用范围 ，对应 bean 属性 scope
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
 
+	//是否是抽象,对应 bean 属性 abstract
 	private boolean abstractFlag = false;
 
+	//是否是延迟加载，对应 bean 属性 lazy-init
 	private boolean lazyInit = false;
 
+	//自动注入模式 ，对应 bean 属性 autowire
 	private int autowireMode = AUTOWIRE_NO;
 
+	//依赖检测 spring 3.0 弃用这个属性
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
+	//用来表示一个bean的初始化依赖另一个bean，对应 depends—on属性
 	@Nullable
 	private String[] dependsOn;
 
+	//设置为false后，其他bean对象在查找依赖的时候，将不会考虑使用这个bean作为装配
 	private boolean autowireCandidate = true;
 
+	//当自动装配出现多个候选bean对象的时候，有primary 标识为true的bean优先作为装配候选
 	private boolean primary = false;
 
+	//用于记录 Qualifier. 对应的子元素 qualifier
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
 	private Supplier<?> instanceSupplier;
 
+	//允许访问非公开的构造器和方法，程序设置
 	private boolean nonPublicAccessAllowed = true;
 
+	//是否使用宽松的模式解析够照函数，默认为true，若为FALSE，在构造器存在重载的时候，spring无法确定一个唯一的构造函数
 	private boolean lenientConstructorResolution = true;
 
+	//对应bean属性 factory-bean
 	@Nullable
 	private String factoryBeanName;
 
+	//对应 bean 属性: factory-method
 	@Nullable
 	private String factoryMethodName;
 
+	//记录狗砸函数注入属性，对应 bean 属性 construct-arg
 	@Nullable
 	private ConstructorArgumentValues constructorArgumentValues;
 
+	//通属性集合
 	@Nullable
 	private MutablePropertyValues propertyValues;
 
+	//方法重写的持有者 ，记录 lookup-method、 replaced-method 元索
 	@Nullable
 	private MethodOverrides methodOverrides;
 
+	//初始化方法
 	@Nullable
 	private String initMethodName;
 
+	//销毁方法
 	@Nullable
 	private String destroyMethodName;
 
+	//是否执行 init-method， 程序设置
 	private boolean enforceInitMethod = true;
 
+	//是杏执行 destory-method，程序设置
 	private boolean enforceDestroyMethod = true;
 
+	//是否是用户 定义 的而不是应用程序本身定义的，创建 AOP 时候为 true，程序设宜
 	private boolean synthetic = false;
 
+	//定义这个 bean 的应用
+	// APPLICATION: 用户
+	// INFRASTRUCTURE: 完全内部使用与用户无关
+	// SUPPORT: 某些复杂配置的一部分
+	//程序设置
 	private int role = BeanDefinition.ROLE_APPLICATION;
 
+	//bean 的描述信息
 	@Nullable
 	private String description;
 
+	//这个bean定义的资源
 	@Nullable
 	private Resource resource;
 
@@ -1098,6 +1126,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * @throws BeanDefinitionValidationException in case of validation failure
 	 */
 	protected void prepareMethodOverride(MethodOverride mo) throws BeanDefinitionValidationException {
+		// 获取对应类中对应方法名的个数
 		int count = ClassUtils.getMethodCountForName(getBeanClass(), mo.getMethodName());
 		if (count == 0) {
 			throw new BeanDefinitionValidationException(
@@ -1106,6 +1135,7 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		}
 		else if (count == 1) {
 			// Mark override as not overloaded, to avoid the overhead of arg type checking.
+			// 标记 MethodOverride 暂未被被盖，避免参数类型检查的开销 。
 			mo.setOverloaded(false);
 		}
 	}

@@ -48,6 +48,26 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 
 	@Override
 	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+		// optimize: 用来控制通过 CGLIB 创建的代理是否使用激进的优化策略 。
+		// 除非完全了解 AOP 代理如何处理优化，否则不推荐用户使用这个设直 。
+		// 目前这个属性仅用 于 CGLIB 代理，对于 JDK 动态代理(默认代理)无效 。
+
+		// proxyTargetClass: 这个属性为true时， 目标类本身被代理而不是目标类的接口。
+		// 如果这个属性值被设为 true, CGLIB 代理将被创建，设直方式为<aop:aspectj-autoproxy proxy-target-class="true"/>。
+
+		// hasNoUserSuppliedProxyInterfaces:是否存在代理接口。
+
+		// 如果目标对象实现了接口，默认情况下会采用 JDK 的动态代理实现 AOP。
+		// 如果目标对象实现了接口，可以强制使用 CGLIB 实现 AOP。
+		// 如果目标对象没有实现接口，必须采用 CGLIB 库，Spring 会自动在 JDK 动态代理和 CGLIB 之间转换 。
+
+		// 如何强制使用 CGLIB 实现 AOP?
+		//    添加 CGLIB 库， Spring_HOME/cglib/*.jar。
+		//    在 Spring配直文件中加入<aop:aspectj-autoproxy proxy-target-class="true">。
+		// JDK动态代理和 CGLIB字节码生成的区别?
+		//    JDK 动态代理只能对实现了 接 口的类生成代理，而不能针对类 。
+		//    CGLIB 是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法，因为 是继承，所以该类或方法最好不要声明成丑nal。
+
 		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
 			Class<?> targetClass = config.getTargetClass();
 			if (targetClass == null) {

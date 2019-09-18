@@ -28,3 +28,23 @@ Follow [@SpringCentral](https://twitter.com/springcentral), [@SpringFramework](h
 ## License
 
 The Spring Framework is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+
+
+## 下面是自己编译过程中的记录
+
+1. 导入idea
+
+2. 此时直接导入idea spring-core工程会报错缺少jar包：spring-cglib-repack-x.x.x.jar、spring-objenesis-repack-x.x.jar 
+要在spring的解压目录下执行下面这两个命令：
+
+gradle objenesisRepackJar
+   
+gradle cglibRepackJar
+
+3. 解决spring-oxm报错问题（缺少castor和jax）
+
+在spring的解压目录下执行下面命令
+
+1.gradle genCastor
+
+2.gradle genJaxb
